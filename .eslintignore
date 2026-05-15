@@ -1,0 +1,7 @@
+build
+node_modules
+bin
+*.d.ts
+dist
+**/*.backup*.tsx
+**/*.save

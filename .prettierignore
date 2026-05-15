@@ -1,0 +1,8 @@
+node_modules
+build
+dist
+playwright-report
+.hydrogen
+**/*.backup*.tsx
+**/*.save
+**/*.backup.tsx
