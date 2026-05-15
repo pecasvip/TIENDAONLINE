@@ -1,58 +1,77 @@
-# Hydrogen template: Demo Store
+# Diamond Jewelry Co - Hydrogen Storefront
 
-Hydrogen is Shopify’s stack for headless commerce. Hydrogen is designed to dovetail with [Remix](https://remix.run/), Shopify’s full stack web framework. This template contains a **full-featured setup** of components, queries and tooling to get started with Hydrogen. It is deployed at [hydrogen.shop](https://hydrogen.shop)
+This repository contains the Diamond Jewelry Co storefront built with Shopify Hydrogen, Remix, and Oxygen.
 
-[Check out Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
-[Get familiar with Remix](https://remix.run/docs/en/v1)
+## What this project includes
 
-## What's included
+- Shopify Hydrogen + Remix storefront
+- Customer account support
+- Tailwind CSS and responsive UI
+- Shop and product GraphQL queries
+- Static assets and image assets for the storefront
+- Local dev server and production build configuration
 
-- Remix
-- Hydrogen
-- Oxygen
-- Shopify CLI
-- ESLint
-- Prettier
-- GraphQL generator
-- TypeScript and JavaScript flavors
-- Tailwind CSS (via PostCSS)
-- Full-featured setup of components and routes
+## Repo location
 
-## Getting started
+This project is published at:
 
-**Requirements:**
+`https://github.com/diamondjewelry18k-hub/TIENDAONLINE`
 
-- Node.js version 18.0.0 or higher
+## Requirements
 
-```bash
-npm create @shopify/hydrogen@latest -- --template demo-store
+- Node.js 18 or higher
+- npm
+- Shopify Storefront API credentials
+- Customer Account API configuration for account routes
+
+## Environment setup
+
+Copy `.env.example` if available or create `.env` with the following values:
+
+```env
+SESSION_SECRET="cualquiertexto_largo"
+PUBLIC_STORE_DOMAIN="diamondjewelry-co.myshopify.com"
+PUBLIC_STOREFRONT_API_TOKEN="<PUBLIC_STORE_API_TOKEN>"
+PRIVATE_STOREFRONT_API_TOKEN="<PRIVATE_STORE_API_TOKEN>"
+PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID="<CUSTOMER_ACCOUNT_API_CLIENT_ID>"
+PUBLIC_CUSTOMER_ACCOUNT_API_URL="https://diamondjewelry-co.myshopify.com"
+PRIVATE_CUSTOMER_ACCOUNT_API_SECRET="<CUSTOMER_ACCOUNT_API_SECRET>"
+PUBLIC_CHECKOUT_DOMAIN="https://checkout.shopify.com"
+SHOP_ID="<SHOP_ID>"
 ```
 
-Remember to update `.env` with your shop's domain and Storefront API token!
+### Important
 
-## Building for production
+- `PUBLIC_STOREFRONT_API_TOKEN` must be the public storefront token
+- `PRIVATE_STOREFRONT_API_TOKEN` must be the private storefront token
+- Do not store admin API keys or OAuth secrets here
+- `.env` is ignored by git
+
+## Run locally
+
+```bash
+git clone https://github.com/diamondjewelry18k-hub/TIENDAONLINE.git
+cd TIENDAONLINE
+npm install --legacy-peer-deps
+npm run dev
+```
+
+Then open the local dev server shown in the terminal.
+
+## Build for production
 
 ```bash
 npm run build
 ```
 
-## Local development
+## Notes
 
-```bash
-npm run dev
-```
+- If the Storefront API returns `403`, verify your API token permissions and that the store domain is correct.
+- Ensure the menus `main-menu` and `footer` exist in Shopify navigation.
+- If customer account routes fail, verify the Customer Account API client ID and secret settings in Shopify.
 
-## Setup for using Customer Account API (`/account` section)
+## Useful links
 
-### Setup public domain using ngrok
-
-1. Setup a [ngrok](https://ngrok.com/) account and add a permanent domain (ie. `https://<your-ngrok-domain>.app`).
-1. Install the [ngrok CLI](https://ngrok.com/download) to use in terminal
-1. Start ngrok using `ngrok http --domain=<your-ngrok-domain>.app 3000`
-
-### Include public domain in Customer Account API settings
-
-1. Go to your Shopify admin => `Hydrogen` or `Headless` app/channel => Customer Account API => Application setup
-1. Edit `Callback URI(s)` to include `https://<your-ngrok-domain>.app/account/authorize`
-1. Edit `Javascript origin(s)` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
-1. Edit `Logout URI` to include your public domain `https://<your-ngrok-domain>.app` or keep it blank
+- [Shopify Hydrogen docs](https://shopify.dev/custom-storefronts/hydrogen)
+- [Remix docs](https://remix.run/docs)
+- [Shopify Storefront API](https://shopify.dev/docs/api/storefront)
