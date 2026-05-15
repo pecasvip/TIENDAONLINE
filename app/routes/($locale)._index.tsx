@@ -70,7 +70,18 @@ function loadDeferredData({context}: LoaderFunctionArgs) {
 }
 
 export const meta = ({matches}: MetaArgs<typeof loader>) => {
-  return getSeoMeta(...matches.map((match) => (match.data as any).seo));
+  const seoData = matches
+    .map((match) => (match.data as any).seo)
+    .filter(Boolean);
+
+  if (seoData.length === 0) {
+    return {
+      title: 'Diamond Jewelry Co',
+      description: 'Tienda online de joyería de lujo',
+    };
+  }
+
+  return getSeoMeta(...seoData);
 };
 
 export default function Homepage() {

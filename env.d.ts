@@ -27,6 +27,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string;
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string;
+    PRIVATE_CUSTOMER_ACCOUNT_API_SECRET?: string;
     PUBLIC_CHECKOUT_DOMAIN: string;
     SHOP_ID: string;
   }
