@@ -54,7 +54,7 @@ export const links: LinksFunction = () => {
   return [
     {rel: 'preconnect', href: 'https://cdn.shopify.com'},
     {rel: 'preconnect', href: 'https://shop.app'},
-    {rel: 'icon', type: 'image/png', href: '/favicon.png'},
+    {rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg'},
   ];
 };
 
