@@ -8,6 +8,7 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import {Autoplay} from 'swiper/modules';
 import {Await, useLoaderData} from '@remix-run/react';
+import {ProductCard} from '~/components/ProductCard';
 import {getSeoMeta} from '@shopify/hydrogen';
 import {motion} from 'framer-motion';
 
