@@ -28,7 +28,6 @@ import invariant from 'tiny-invariant';
 import {PageLayout} from '~/components/PageLayout';
 import {GenericError} from '~/components/GenericError';
 import {NotFound} from '~/components/NotFound';
-
 import {seoPayload} from '~/lib/seo.server';
 import styles from '~/styles/app.css?url';
 

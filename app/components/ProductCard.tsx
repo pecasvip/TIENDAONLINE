@@ -48,8 +48,7 @@ export function ProductCard({
   const discount =
     isOnSale && compareAtPrice
       ? Math.round(
-          (1 -
-            parseFloat(price.amount) / parseFloat(compareAtPrice.amount)) *
+          (1 - parseFloat(price.amount) / parseFloat(compareAtPrice.amount)) *
             100,
         )
       : null;

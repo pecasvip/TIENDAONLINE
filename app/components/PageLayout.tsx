@@ -44,7 +44,9 @@ export function PageLayout({children, layout}: LayoutProps) {
     <>
       <AnnouncementBar />
       <div className="flex flex-col min-h-screen">
-        <a href="#mainContent" className="sr-only">Skip to content</a>
+        <a href="#mainContent" className="sr-only">
+          Skip to content
+        </a>
         {headerMenu && layout?.shop.name && (
           <Header title={layout.shop.name} menu={headerMenu} />
         )}
@@ -59,8 +61,16 @@ export function PageLayout({children, layout}: LayoutProps) {
 
 function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
   const isHome = useIsHomePath();
-  const {isOpen: isCartOpen, openDrawer: openCart, closeDrawer: closeCart} = useDrawer();
-  const {isOpen: isMenuOpen, openDrawer: openMenu, closeDrawer: closeMenu} = useDrawer();
+  const {
+    isOpen: isCartOpen,
+    openDrawer: openCart,
+    closeDrawer: closeCart,
+  } = useDrawer();
+  const {
+    isOpen: isMenuOpen,
+    openDrawer: openMenu,
+    closeDrawer: closeMenu,
+  } = useDrawer();
   const addToCartFetchers = useCartFetchers(CartForm.ACTIONS.LinesAdd);
 
   useEffect(() => {
@@ -71,9 +81,21 @@ function Header({title, menu}: {title: string; menu?: EnhancedMenu}) {
   return (
     <>
       <CartDrawer isOpen={isCartOpen} onClose={closeCart} />
-      {menu && <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />}
-      <DesktopHeader isHome={isHome} title={title} menu={menu} openCart={openCart} />
-      <MobileHeader isHome={isHome} title={title} openCart={openCart} openMenu={openMenu} />
+      {menu && (
+        <MenuDrawer isOpen={isMenuOpen} onClose={closeMenu} menu={menu} />
+      )}
+      <DesktopHeader
+        isHome={isHome}
+        title={title}
+        menu={menu}
+        openCart={openCart}
+      />
+      <MobileHeader
+        isHome={isHome}
+        title={title}
+        openCart={openCart}
+        openMenu={openMenu}
+      />
     </>
   );
 }
@@ -94,7 +116,15 @@ function CartDrawer({isOpen, onClose}: {isOpen: boolean; onClose: () => void}) {
   );
 }
 
-export function MenuDrawer({isOpen, onClose, menu}: {isOpen: boolean; onClose: () => void; menu: EnhancedMenu}) {
+export function MenuDrawer({
+  isOpen,
+  onClose,
+  menu,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+  menu: EnhancedMenu;
+}) {
   return (
     <Drawer open={isOpen} onClose={onClose} openFrom="left" heading="Menu">
       <div className="grid">
@@ -104,7 +134,13 @@ export function MenuDrawer({isOpen, onClose, menu}: {isOpen: boolean; onClose: (
   );
 }
 
-function MenuMobileNav({menu, onClose}: {menu: EnhancedMenu; onClose: () => void}) {
+function MenuMobileNav({
+  menu,
+  onClose,
+}: {
+  menu: EnhancedMenu;
+  onClose: () => void;
+}) {
   return (
     <nav className="flex flex-col gap-0">
       {(menu?.items || []).map((item) => (
@@ -115,7 +151,9 @@ function MenuMobileNav({menu, onClose}: {menu: EnhancedMenu; onClose: () => void
             onClick={onClose}
             className={({isActive}) =>
               `block px-6 py-4 border-b border-white/10 uppercase tracking-widest text-sm font-medium transition-colors ${
-                isActive ? "text-[#C9A84C]" : "text-white/80 hover:text-[#C9A84C]"
+                isActive
+                  ? 'text-[#C9A84C]'
+                  : 'text-white/80 hover:text-[#C9A84C]'
               }`
             }
           >
@@ -127,8 +165,16 @@ function MenuMobileNav({menu, onClose}: {menu: EnhancedMenu; onClose: () => void
   );
 }
 
-function MobileHeader({title, isHome, openCart, openMenu}: {
-  title: string; isHome: boolean; openCart: () => void; openMenu: () => void;
+function MobileHeader({
+  title,
+  isHome,
+  openCart,
+  openMenu,
+}: {
+  title: string;
+  isHome: boolean;
+  openCart: () => void;
+  openMenu: () => void;
 }) {
   const params = useParams();
   const {y} = useWindowScroll();
@@ -138,7 +184,7 @@ function MobileHeader({title, isHome, openCart, openMenu}: {
     <header
       role="banner"
       className={`flex lg:hidden sticky top-0 z-40 w-full transition-all duration-300 ${
-        scrolled ? "bg-[#0A0F1E]/98 backdrop-blur-xl shadow-lg" : "bg-[#0A0F1E]"
+        scrolled ? 'bg-[#0A0F1E]/98 backdrop-blur-xl shadow-lg' : 'bg-[#0A0F1E]'
       } border-b border-white/10`}
     >
       <div className="relative flex items-center w-full h-16 px-4">
@@ -153,12 +199,16 @@ function MobileHeader({title, isHome, openCart, openMenu}: {
         </div>
         <div className="absolute left-1/2 -translate-x-1/2">
           <Link to="/" prefetch="intent">
-            <img src="/images/logo.jpg" alt={title} className="h-10 w-auto object-contain" />
+            <img
+              src="/images/logo.jpg"
+              alt={title}
+              className="h-10 w-auto object-contain"
+            />
           </Link>
         </div>
         <div className="flex items-center justify-end gap-1 ml-auto">
           <Link
-            to={params.locale ? `/${params.locale}/search` : "/search"}
+            to={params.locale ? `/${params.locale}/search` : '/search'}
             className="flex items-center justify-center w-9 h-9 text-white/80 hover:text-[#C9A84C] transition-colors"
             aria-label="Buscar"
           >
@@ -171,8 +221,16 @@ function MobileHeader({title, isHome, openCart, openMenu}: {
   );
 }
 
-function DesktopHeader({isHome, menu, openCart, title}: {
-  isHome: boolean; openCart: () => void; menu?: EnhancedMenu; title: string;
+function DesktopHeader({
+  isHome,
+  menu,
+  openCart,
+  title,
+}: {
+  isHome: boolean;
+  openCart: () => void;
+  menu?: EnhancedMenu;
+  title: string;
 }) {
   const params = useParams();
   const {y} = useWindowScroll();
@@ -183,7 +241,9 @@ function DesktopHeader({isHome, menu, openCart, title}: {
     <header
       role="banner"
       className={`hidden lg:flex flex-col sticky top-0 z-40 w-full transition-all duration-300 ${
-        scrolled ? "bg-[#0A0F1E]/98 backdrop-blur-xl shadow-lg shadow-black/40" : "bg-[#0A0F1E]"
+        scrolled
+          ? 'bg-[#0A0F1E]/98 backdrop-blur-xl shadow-lg shadow-black/40'
+          : 'bg-[#0A0F1E]'
       } border-b border-white/10`}
     >
       <div className="w-full border-b border-white/5">
@@ -193,13 +253,15 @@ function DesktopHeader({isHome, menu, openCart, title}: {
               <img
                 src="/images/logo.jpg"
                 alt={title}
-                className={`object-contain transition-all duration-300 ${scrolled ? "h-12" : "h-16"}`}
+                className={`object-contain transition-all duration-300 ${
+                  scrolled ? 'h-12' : 'h-16'
+                }`}
               />
             </Link>
           </div>
           <div className="absolute right-8 flex items-center gap-4">
             <Link
-              to={params.locale ? `/${params.locale}/search` : "/search"}
+              to={params.locale ? `/${params.locale}/search` : '/search'}
               className="flex items-center gap-2 text-white/70 hover:text-[#C9A84C] transition-colors text-sm uppercase tracking-widest"
               aria-label="Buscar"
             >
@@ -221,8 +283,8 @@ function DesktopHeader({isHome, menu, openCart, title}: {
               className={({isActive}) =>
                 `px-5 py-3 uppercase tracking-[0.15em] text-xs font-medium transition-all duration-200 border-b-2 h-full flex items-center ${
                   isActive
-                    ? "text-[#C9A84C] border-[#C9A84C]"
-                    : "text-white/70 hover:text-[#C9A84C] border-transparent hover:border-[#C9A84C]/50"
+                    ? 'text-[#C9A84C] border-[#C9A84C]'
+                    : 'text-white/70 hover:text-[#C9A84C] border-transparent hover:border-[#C9A84C]/50'
                 }`
               }
             >
@@ -235,30 +297,53 @@ function DesktopHeader({isHome, menu, openCart, title}: {
   );
 }
 
-function CartCount({isHome, openCart}: {isHome: boolean; openCart: () => void}) {
+function CartCount({
+  isHome,
+  openCart,
+}: {
+  isHome: boolean;
+  openCart: () => void;
+}) {
   const rootData = useRouteLoaderData<RootLoader>('root');
   if (!rootData) return null;
   return (
     <Suspense fallback={<Badge count={0} dark={isHome} openCart={openCart} />}>
       <Await resolve={rootData?.cart}>
-        {(cart) => <Badge dark={isHome} openCart={openCart} count={cart?.totalQuantity || 0} />}
+        {(cart) => (
+          <Badge
+            dark={isHome}
+            openCart={openCart}
+            count={cart?.totalQuantity || 0}
+          />
+        )}
       </Await>
     </Suspense>
   );
 }
 
-function Badge({openCart, dark, count}: {count: number; dark: boolean; openCart: () => void}) {
+function Badge({
+  openCart,
+  dark,
+  count,
+}: {
+  count: number;
+  dark: boolean;
+  openCart: () => void;
+}) {
   const isHydrated = useIsHydrated();
-  const BadgeCounter = useMemo(() => (
-    <>
-      <IconBag />
-      {count > 0 && (
-        <div className="absolute -bottom-1 -right-1 bg-[#C9A84C] text-[#0A0F1E] text-[0.6rem] font-bold h-4 min-w-[1rem] flex items-center justify-center rounded-full px-1">
-          {count}
-        </div>
-      )}
-    </>
-  ), [count]);
+  const BadgeCounter = useMemo(
+    () => (
+      <>
+        <IconBag />
+        {count > 0 && (
+          <div className="absolute -bottom-1 -right-1 bg-[#C9A84C] text-[#0A0F1E] text-[0.6rem] font-bold h-4 min-w-[1rem] flex items-center justify-center rounded-full px-1">
+            {count}
+          </div>
+        )}
+      </>
+    ),
+    [count],
+  );
 
   return isHydrated ? (
     <button
@@ -269,7 +354,10 @@ function Badge({openCart, dark, count}: {count: number; dark: boolean; openCart:
       {BadgeCounter}
     </button>
   ) : (
-    <Link to="/cart" className="relative flex items-center justify-center w-8 h-8 text-white/70 hover:text-[#C9A84C] transition-colors">
+    <Link
+      to="/cart"
+      className="relative flex items-center justify-center w-8 h-8 text-white/70 hover:text-[#C9A84C] transition-colors"
+    >
       {BadgeCounter}
     </Link>
   );
@@ -278,34 +366,47 @@ function Badge({openCart, dark, count}: {count: number; dark: boolean; openCart:
 function Footer({menu}: {menu?: EnhancedMenu}) {
   const isHome = useIsHomePath();
   const itemsCount = menu
-    ? menu?.items?.length + 1 > 4 ? 4 : menu?.items?.length + 1
+    ? menu?.items?.length + 1 > 4
+      ? 4
+      : menu?.items?.length + 1
     : [];
 
   return (
     <Section
-      divider={isHome ? "none" : "top"}
+      divider={isHome ? 'none' : 'top'}
       as="footer"
       role="contentinfo"
       className={`grid min-h-[25rem] items-start grid-flow-row w-full gap-6 py-8 px-6 md:px-8 lg:px-12 md:gap-8 lg:gap-12 grid-cols-1 md:grid-cols-2 lg:grid-cols-${itemsCount} bg-[#060912] text-white/60 overflow-hidden border-t border-white/10`}
     >
       <FooterMenu menu={menu} />
       <CountrySelector />
-      <div className={`self-end pt-8 opacity-40 md:col-span-2 lg:col-span-${itemsCount} text-sm`}>
-        &copy; {new Date().getFullYear()} Diamond Jewelry Co. Todos los derechos reservados.
+      <div
+        className={`self-end pt-8 opacity-40 md:col-span-2 lg:col-span-${itemsCount} text-sm`}
+      >
+        &copy; {new Date().getFullYear()} Diamond Jewelry Co. Todos los derechos
+        reservados.
       </div>
     </Section>
   );
 }
 
 function FooterLink({item}: {item: ChildEnhancedMenuItem}) {
-  if (item.to.startsWith("http")) {
-    return <a href={item.to} target={item.target} rel="noopener noreferrer">{item.title}</a>;
+  if (item.to.startsWith('http')) {
+    return (
+      <a href={item.to} target={item.target} rel="noopener noreferrer">
+        {item.title}
+      </a>
+    );
   }
-  return <Link to={item.to} target={item.target} prefetch="intent">{item.title}</Link>;
+  return (
+    <Link to={item.to} target={item.target} prefetch="intent">
+      {item.title}
+    </Link>
+  );
 }
 
 function FooterMenu({menu}: {menu?: EnhancedMenu}) {
-  const styles = {section: "grid gap-4", nav: "grid gap-2 pb-6"};
+  const styles = {section: 'grid gap-4', nav: 'grid gap-2 pb-6'};
   return (
     <>
       {(menu?.items || []).map((item) => (
@@ -314,15 +415,25 @@ function FooterMenu({menu}: {menu?: EnhancedMenu}) {
             {({open}) => (
               <>
                 <Disclosure.Button className="text-left md:cursor-default">
-                  <Heading className="flex justify-between text-white/80 uppercase tracking-widest text-xs" size="lead" as="h3">
+                  <Heading
+                    className="flex justify-between text-white/80 uppercase tracking-widest text-xs"
+                    size="lead"
+                    as="h3"
+                  >
                     {item.title}
                     {item?.items?.length > 0 && (
-                      <span className="md:hidden"><IconCaret direction={open ? "up" : "down"} /></span>
+                      <span className="md:hidden">
+                        <IconCaret direction={open ? 'up' : 'down'} />
+                      </span>
                     )}
                   </Heading>
                 </Disclosure.Button>
                 {item?.items?.length > 0 ? (
-                  <div className={`${open ? "max-h-48 h-fit" : "max-h-0 md:max-h-fit"} overflow-hidden transition-all duration-300`}>
+                  <div
+                    className={`${
+                      open ? 'max-h-48 h-fit' : 'max-h-0 md:max-h-fit'
+                    } overflow-hidden transition-all duration-300`}
+                  >
                     <Suspense data-comment="This suspense fixes a hydration bug in Disclosure.Panel with static prop">
                       <Disclosure.Panel static>
                         <nav className={styles.nav}>

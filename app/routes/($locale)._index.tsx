@@ -8,10 +8,10 @@ import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import {Autoplay} from 'swiper/modules';
 import {Await, useLoaderData} from '@remix-run/react';
-import {ProductCard} from '~/components/ProductCard';
 import {getSeoMeta} from '@shopify/hydrogen';
 import {motion} from 'framer-motion';
 
+import {ProductCard} from '~/components/ProductCard';
 import CouponRevealViral from '~/components/CouponRevealViral';
 import Reveal from '~/components/Reveal';
 import {MEDIA_FRAGMENT} from '~/data/fragments';
@@ -172,16 +172,42 @@ export default function Homepage() {
                   {(response: any) => {
                     if (!response?.products?.nodes) return null;
                     return response.products.nodes.map((product: any) => (
-                      <div key={product.id} className="group relative flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                        <a href={`/products/${product.handle}`} className="block overflow-hidden bg-gray-50 aspect-square relative">
-                          <img src={product.featuredImage?.url} alt={product.title} width="400" height="400" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                      <div
+                        key={product.id}
+                        className="group relative flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                      >
+                        <a
+                          href={`/products/${product.handle}`}
+                          className="block overflow-hidden bg-gray-50 aspect-square relative"
+                        >
+                          <img
+                            src={product.featuredImage?.url}
+                            alt={product.title}
+                            width="400"
+                            height="400"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
                         </a>
                         <div className="flex flex-col gap-3 p-4 flex-1">
                           <a href={`/products/${product.handle}`}>
-                            <h3 className="text-sm font-medium text-[#0A0F1E] leading-snug line-clamp-2 hover:text-[#C9A84C] transition-colors">{product.title}</h3>
+                            <h3 className="text-sm font-medium text-[#0A0F1E] leading-snug line-clamp-2 hover:text-[#C9A84C] transition-colors">
+                              {product.title}
+                            </h3>
                           </a>
-                          <span className="text-[#C9A84C] font-bold text-base">${parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString("es-CO")} {product.priceRange.minVariantPrice.currencyCode}</span>
-                          <a href={`/products/${product.handle}`} className="w-full mt-auto bg-[#0A0F1E] hover:bg-[#C9A84C] text-white hover:text-[#0A0F1E] text-xs font-bold uppercase tracking-widest py-3 rounded-full transition-all duration-300 text-center">Agregar al carrito</a>
+                          <span className="text-[#C9A84C] font-bold text-base">
+                            $
+                            {parseFloat(
+                              product.priceRange.minVariantPrice.amount,
+                            ).toLocaleString('es-CO')}{' '}
+                            {product.priceRange.minVariantPrice.currencyCode}
+                          </span>
+                          <a
+                            href={`/products/${product.handle}`}
+                            className="w-full mt-auto bg-[#0A0F1E] hover:bg-[#C9A84C] text-white hover:text-[#0A0F1E] text-xs font-bold uppercase tracking-widest py-3 rounded-full transition-all duration-300 text-center"
+                          >
+                            Agregar al carrito
+                          </a>
                         </div>
                       </div>
                     ));
@@ -201,7 +227,6 @@ export default function Homepage() {
         <section className="py-32 px-6 bg-[#0A0F1E]">
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-
               {/* Cadenas */}
               <div className="group relative overflow-hidden rounded-[40px] h-[300px] md:h-[500px]">
                 <picture className="absolute inset-0 w-full h-full">
@@ -279,7 +304,6 @@ export default function Homepage() {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </section>

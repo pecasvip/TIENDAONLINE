@@ -106,7 +106,12 @@ export function AnnouncementBar({speed = 40}: {speed?: number}) {
           to   { transform: translateX(var(--ann-width)); }
         }
       `}</style>
-      <div ref={barRef} className="ann-luxury" role="region" aria-label="Anuncio de la tienda">
+      <div
+        ref={barRef}
+        className="ann-luxury"
+        role="region"
+        aria-label="Anuncio de la tienda"
+      >
         <div ref={trackRef} className="ann-luxury-track" />
       </div>
     </>
