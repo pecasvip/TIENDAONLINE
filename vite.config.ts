@@ -8,7 +8,14 @@ export default defineConfig({
   plugins: [hydrogen(), oxygen(), remix(), tsconfigPaths()],
   ssr: {
     optimizeDeps: {
-      include: ['typographic-base', 'cookie', 'set-cookie-parser'],
+      include: [
+        'scheduler',
+        'react-reconciler',
+        'react-reconciler/constants',
+        'typographic-base',
+        'cookie',
+        'set-cookie-parser',
+      ],
     },
   },
 });

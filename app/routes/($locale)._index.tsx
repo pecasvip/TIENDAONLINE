@@ -4,6 +4,7 @@ import {
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
 import {useEffect, useRef} from 'react';
+import DiamondBackground from '~/components/DiamondBackground';
 import {Suspense} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
@@ -150,18 +151,24 @@ export default function Homepage() {
     <main className="bg-[#0A0F1E] text-[#F8F6F0CF] min-h-screen overflow-hidden">
 
       {/* ── HERO SLIDER ── */}
-      <section className="relative min-h-screen">
-        <Swiper
-          modules={[Autoplay]}
-          autoplay={{delay: 4000, disableOnInteraction: false}}
-          loop
-          className="h-screen"
-        >
+      <section className="relative min-h-screen overflow-hidden">
+
+  {/* Shader background */}
+  <div className="absolute inset-0 z-0 opacity-40">
+    <DiamondBackground />
+  </div>
+
+  <Swiper
+    className="relative z-20 h-screen"
+    modules={[Autoplay]}
+    autoplay={{delay: 4000, disableOnInteraction: false}}
+    loop
+  >
           <SwiperSlide>
             <div className="relative h-screen">
               <picture className="absolute inset-0 w-full h-full">
                 <source media="(max-width: 768px)" srcSet="/images/banner1-mobile.jpg" />
-                <img src="/images/banner1.jpg" alt="Banner de joyería" className="w-full h-full object-cover object-top" />
+                <img src="/images/banner1.jpg" alt="Banner de joyería" className="w-full h-full object-cover object-top opacity-75"/>
               </picture>
             </div>
           </SwiperSlide>
@@ -169,7 +176,7 @@ export default function Homepage() {
             <div className="relative h-screen">
               <picture className="absolute inset-0 w-full h-full">
                 <source media="(max-width: 768px)" srcSet="/images/banner2-mobile.jpg" />
-                <img src="/images/banner2.jpg" alt="Colección de joyería" className="w-full h-full object-cover object-top" />
+                <img src="/images/banner2.jpg" alt="Colección de joyería" className="w-full h-full object-cover object-top opacity-75"/>
               </picture>
             </div>
           </SwiperSlide>
@@ -177,7 +184,7 @@ export default function Homepage() {
             <div className="relative h-screen">
               <picture className="absolute inset-0 w-full h-full">
                 <source media="(max-width: 768px)" srcSet="/images/banner3-mobile.jpg" />
-                <img src="/images/banner3.jpg" alt="Joyas exclusivas" className="w-full h-full object-cover object-top" />
+                <img src="/images/banner3.jpg" alt="Joyas exclusivas" className="w-full h-full object-cover object-top opacity-75" />
               </picture>
             </div>
           </SwiperSlide>
@@ -456,3 +463,4 @@ export const FEATURED_COLLECTIONS_QUERY = `#graphql
     }
   }
 ` as const;
+
