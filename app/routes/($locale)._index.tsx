@@ -178,14 +178,10 @@ export default function Homepage() {
                 <source media="(max-width: 768px)" srcSet="/images/banner1-mobile.jpg" />
                 <img src="/images/banner1.jpg" alt="Banner de joyería" className="w-full h-full object-cover object-top" />
               </picture>
-              <div className="absolute inset-0 bg-black/40" />
+              <div className="absolute inset-0 bg-black/0" />
               <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
                 <div ref={heroTextRef}>
-                  <p className="hero-eyebrow uppercase tracking-[0.4em] text-[#C9A84C] text-sm mb-4 opacity-0">Colección Exclusiva</p>
-                  <h1 className="hero-title text-6xl md:text-8xl font-bold text-white mt-4 leading-tight opacity-0">Diamond<br />Jewelry Co</h1>
-                  <p className="hero-subtitle text-white/70 mt-6 text-lg opacity-0">Joyería de lujo hecha para ti</p>
-                  <a href="/collections/all" className="hero-cta opacity-0 inline-block mt-8 px-10 py-3 border border-[#C9A84C] text-[#C9A84C] uppercase tracking-[0.3em] text-xs hover:bg-[#C9A84C] hover:text-[#0A0F1E] transition-all duration-300">Ver colección</a>
-                </div>
+              </div>
               </div>
             </div>
           </SwiperSlide>
