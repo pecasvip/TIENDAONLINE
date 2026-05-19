@@ -7,20 +7,18 @@ import {useEffect, useRef} from 'react';
 import {Suspense} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
-import {Autoplay} from 'swiper/modules';
+import {Autoplay, FreeMode, Navigation} from 'swiper/modules';
 import {Await, useLoaderData} from '@remix-run/react';
 import {getSeoMeta} from '@shopify/hydrogen';
 import {motion} from 'framer-motion';
 import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 
-import {ProductCard} from '~/components/ProductCard';
 import CouponRevealViral from '~/components/CouponRevealViral';
 import Reveal from '~/components/Reveal';
 import {MEDIA_FRAGMENT} from '~/data/fragments';
 import {seoPayload} from '~/lib/seo.server';
 import {routeHeaders} from '~/data/cache';
-import {PRODUCTS_QUERY} from '~/queries/products';
 
 export const headers = routeHeaders;
 
@@ -88,35 +86,26 @@ export const meta = ({matches}: MetaArgs<typeof loader>) => {
   return getSeoMeta(...seoData);
 };
 
+const COLLECTIONS = [
+  {handle: 'pulseras-tejidas', title: 'Pulseras Tejidas'},
+  {handle: 'anillos', title: 'Anillos'},
+  {handle: 'cadenas', title: 'Cadenas'},
+  {handle: 'topos', title: 'Topos'},
+  {handle: 'candongas', title: 'Candongas'},
+  {handle: 'dijes', title: 'Dijes'},
+  {handle: 'pulsos', title: 'Pulsos'},
+];
+
 export default function Homepage() {
   const {featuredProducts, collections} = useLoaderData<typeof loader>();
 
-  const heroTextRef = useRef<HTMLDivElement>(null);
   const productsRef = useRef<HTMLDivElement>(null);
-  const categoriesRef = useRef<HTMLDivElement>(null);
   const affordableRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    // Delay para esperar que Swiper monte el DOM
     const timer = setTimeout(() => {
-      // Hero
-      if (heroTextRef.current) {
-        const eyebrow = heroTextRef.current.querySelector('.hero-eyebrow');
-        const title = heroTextRef.current.querySelector('.hero-title');
-        const subtitle = heroTextRef.current.querySelector('.hero-subtitle');
-        const cta = heroTextRef.current.querySelector('.hero-cta');
-
-        if (eyebrow && title && subtitle && cta) {
-          const tl = gsap.timeline();
-          tl.fromTo(eyebrow, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 1, ease: 'power3.out'})
-            .fromTo(title, {opacity: 0, y: 60}, {opacity: 1, y: 0, duration: 1.2, ease: 'power3.out'}, '-=0.6')
-            .fromTo(subtitle, {opacity: 0, y: 30}, {opacity: 1, y: 0, duration: 0.8, ease: 'power2.out'}, '-=0.5')
-            .fromTo(cta, {opacity: 0, scale: 0.9}, {opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)'}, '-=0.3');
-        }
-      }
-
       // Productos
       if (productsRef.current) {
         ScrollTrigger.create({
@@ -125,23 +114,13 @@ export default function Homepage() {
           onEnter: () => {
             const cards = productsRef.current!.querySelectorAll('.product-card');
             if (cards.length > 0) {
-              gsap.fromTo(cards, {opacity: 0, y: 50, scale: 0.95}, {opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out'});
+              gsap.fromTo(
+                cards,
+                {opacity: 0, y: 50, scale: 0.95},
+                {opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out'},
+              );
             }
           },
-        });
-      }
-
-      // Categorías
-      if (categoriesRef.current) {
-        const cards = categoriesRef.current.querySelectorAll('.category-card');
-        cards.forEach((card, i) => {
-          gsap.fromTo(
-            card,
-            {opacity: 0, x: i === 0 ? -80 : i === 2 ? 80 : 0, y: i === 1 ? 60 : 0},
-            {opacity: 1, x: 0, y: 0, duration: 0.9, ease: 'power3.out',
-              scrollTrigger: {trigger: card, start: 'top 85%'},
-            },
-          );
         });
       }
 
@@ -149,9 +128,14 @@ export default function Homepage() {
       if (affordableRef.current) {
         const cards = affordableRef.current.querySelectorAll('.affordable-card');
         if (cards.length > 0) {
-          gsap.fromTo(cards, {opacity: 0, y: 40}, {opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
-            scrollTrigger: {trigger: affordableRef.current, start: 'top 80%'},
-          });
+          gsap.fromTo(
+            cards,
+            {opacity: 0, y: 40},
+            {
+              opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+              scrollTrigger: {trigger: affordableRef.current, start: 'top 80%'},
+            },
+          );
         }
       }
     }, 500);
@@ -161,10 +145,11 @@ export default function Homepage() {
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
-  
 
   return (
     <main className="bg-[#0A0F1E] text-[#F8F6F0CF] min-h-screen overflow-hidden">
+
+      {/* ── HERO SLIDER ── */}
       <section className="relative min-h-screen">
         <Swiper
           modules={[Autoplay]}
@@ -178,11 +163,6 @@ export default function Homepage() {
                 <source media="(max-width: 768px)" srcSet="/images/banner1-mobile.jpg" />
                 <img src="/images/banner1.jpg" alt="Banner de joyería" className="w-full h-full object-cover object-top" />
               </picture>
-              <div className="absolute inset-0 bg-black/0" />
-              <div className="relative z-10 h-full flex items-center justify-center text-center px-6">
-                <div ref={heroTextRef}>
-              </div>
-              </div>
             </div>
           </SwiperSlide>
           <SwiperSlide>
@@ -191,7 +171,6 @@ export default function Homepage() {
                 <source media="(max-width: 768px)" srcSet="/images/banner2-mobile.jpg" />
                 <img src="/images/banner2.jpg" alt="Colección de joyería" className="w-full h-full object-cover object-top" />
               </picture>
-              <div className="absolute inset-0 bg-black/0" />
             </div>
           </SwiperSlide>
           <SwiperSlide>
@@ -200,12 +179,12 @@ export default function Homepage() {
                 <source media="(max-width: 768px)" srcSet="/images/banner3-mobile.jpg" />
                 <img src="/images/banner3.jpg" alt="Joyas exclusivas" className="w-full h-full object-cover object-top" />
               </picture>
-              <div className="absolute inset-0 bg-black/0" />
             </div>
           </SwiperSlide>
         </Swiper>
       </section>
 
+      {/* ── PRODUCTOS DESTACADOS ── */}
       <Reveal>
         <section className="py-32 px-6 bg-[#0D1527]">
           <div className="max-w-7xl mx-auto">
@@ -221,14 +200,31 @@ export default function Homepage() {
                     return response.products.nodes.map((product: any) => (
                       <div key={product.id} className="product-card group relative flex flex-col bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                         <a href={`/products/${product.handle}`} className="block overflow-hidden bg-gray-50 aspect-square relative">
-                          <img src={product.featuredImage?.url} alt={product.title} width="400" height="400" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" />
+                          <img
+                            src={product.featuredImage?.url}
+                            alt={product.title}
+                            width="400"
+                            height="400"
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            loading="lazy"
+                          />
                         </a>
                         <div className="flex flex-col gap-3 p-4 flex-1">
                           <a href={`/products/${product.handle}`}>
-                            <h3 className="text-sm font-medium text-[#0A0F1E] leading-snug line-clamp-2 hover:text-[#C9A84C] transition-colors">{product.title}</h3>
+                            <h3 className="text-sm font-medium text-[#0A0F1E] leading-snug line-clamp-2 hover:text-[#C9A84C] transition-colors">
+                              {product.title}
+                            </h3>
                           </a>
-                          <span className="text-[#C9A84C] font-bold text-base">${parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('es-CO')}{' '}{product.priceRange.minVariantPrice.currencyCode}</span>
-                          <a href={`/products/${product.handle}`} className="w-full mt-auto bg-[#0A0F1E] hover:bg-[#C9A84C] text-white hover:text-[#0A0F1E] text-xs font-bold uppercase tracking-widest py-3 rounded-full transition-all duration-300 text-center">Agregar al carrito</a>
+                          <span className="text-[#C9A84C] font-bold text-base">
+                            ${parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('es-CO')}{' '}
+                            {product.priceRange.minVariantPrice.currencyCode}
+                          </span>
+                          <a
+                            href={`/products/${product.handle}`}
+                            className="w-full mt-auto bg-[#0A0F1E] hover:bg-[#C9A84C] text-white hover:text-[#0A0F1E] text-xs font-bold uppercase tracking-widest py-3 rounded-full transition-all duration-300 text-center"
+                          >
+                            Ver producto
+                          </a>
                         </div>
                       </div>
                     ));
@@ -240,44 +236,94 @@ export default function Homepage() {
         </section>
       </Reveal>
 
+      {/* ── CUPÓN VIRAL ── */}
       <Reveal><CouponRevealViral /></Reveal>
 
+      {/* ── CARRUSEL DE COLECCIONES ── */}
       <Reveal>
-        <section className="py-32 px-6 bg-[#0A0F1E]">
+        <section className="py-20 px-6 bg-[#0A0F1E]">
           <div className="max-w-7xl mx-auto">
-            <div ref={categoriesRef} className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="category-card group relative overflow-hidden rounded-[40px] h-[300px] md:h-[500px]">
-                <picture className="absolute inset-0 w-full h-full">
-                  <source media="(max-width: 768px)" srcSet="/images/chain-mobile.jpg" />
-                  <img src="/images/chain.jpg" alt="Cadena de joyería" className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-                </picture>
-                <div className="absolute inset-0 bg-black/40" />
-                <div className="relative z-10 h-full flex items-end p-10">
-                </div>
-              </div>
-              <div className="category-card group relative overflow-hidden rounded-[40px] h-[300px] md:h-[500px]">
-                <picture className="absolute inset-0 w-full h-full">
-                  <source media="(max-width: 768px)" srcSet="/images/ring-mobile.jpg" />
-                  <img src="/images/ring.jpg" alt="Anillo de lujo" className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-                </picture>
-                <div className="absolute inset-0 bg-black/40" />
-                <div className="relative z-10 h-full flex items-end p-10">
-                </div>
-              </div>
-              <div className="category-card group relative overflow-hidden rounded-[40px] h-[300px] md:h-[500px]">
-                <picture className="absolute inset-0 w-full h-full">
-                  <source media="(max-width: 768px)" srcSet="/images/watch-mobile.jpg" />
-                  <img src="/images/watch.jpg" alt="Reloj exclusivo" className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
-                </picture>
-                <div className="absolute inset-0 bg-black/40" />
-                <div className="relative z-10 h-full flex items-end p-10">
-                </div>
-              </div>
+            <div className="mb-12 text-center">
+              <p className="uppercase tracking-[0.3em] text-[#C9A84C] text-sm">Explora</p>
+              <h2 className="text-4xl md:text-6xl font-bold text-[#F8F6F0] mt-4">Nuestras Colecciones</h2>
+            </div>
+            <div className="relative">
+              {/* Botones prev/next */}
+              <button
+                id="col-prev"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 w-12 h-12 rounded-full bg-[#C9A84C] text-[#0A0F1E] flex items-center justify-center shadow-lg hover:bg-white transition-colors duration-300 hidden md:flex"
+                aria-label="Anterior"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                id="col-next"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 w-12 h-12 rounded-full bg-[#C9A84C] text-[#0A0F1E] flex items-center justify-center shadow-lg hover:bg-white transition-colors duration-300 hidden md:flex"
+                aria-label="Siguiente"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+
+              <Suspense fallback={<div className="text-white text-center">Cargando colecciones...</div>}>
+                <Await resolve={collections}>
+                  {(response: any) => {
+                    const nodes = response?.collections?.nodes ?? [];
+                    const ordered = COLLECTIONS.map((col) => {
+                      const found = nodes.find((n: any) => n.handle === col.handle);
+                      return found ? {...found} : {...col, image: null};
+                    });
+                    return (
+                      <Swiper
+                        modules={[Autoplay, FreeMode, Navigation]}
+                        navigation={{
+                          prevEl: '#col-prev',
+                          nextEl: '#col-next',
+                        }}
+                        autoplay={{delay: 3000, disableOnInteraction: false}}
+                        loop
+                        freeMode
+                        spaceBetween={20}
+                        slidesPerView={1.3}
+                        breakpoints={{
+                          640: {slidesPerView: 2.3},
+                          1024: {slidesPerView: 3.5},
+                        }}
+                      >
+                        {ordered.map((col: any) => (
+                          <SwiperSlide key={col.handle}>
+                            <a
+                              href={`/collections/${col.handle}`}
+                              className="block group relative overflow-hidden rounded-[30px] aspect-[4/5]"
+                            >
+                              {col.image?.url ? (
+                                <img
+                                  src={col.image.url}
+                                  alt={col.title}
+                                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-[#0D1527] flex items-center justify-center">
+                                  <span className="text-[#C9A84C] text-lg font-bold">{col.title}</span>
+                                </div>
+                              )}
+                            </a>
+                          </SwiperSlide>
+                        ))}
+                      </Swiper>
+                    );
+                  }}
+                </Await>
+              </Suspense>
             </div>
           </div>
         </section>
       </Reveal>
 
+      {/* ── PRODUCTOS ACCESIBLES ── */}
       <section className="py-24 px-6 relative overflow-hidden">
         <picture className="absolute inset-0 w-full h-full">
           <source media="(max-width: 768px)" srcSet="/images/banner4-mobile.jpg" />
@@ -288,7 +334,9 @@ export default function Homepage() {
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <p className="text-[#C9A84C] uppercase tracking-[0.4em] text-sm mb-4">Accesible para ti</p>
-              <h2 className="text-4xl md:text-6xl font-bold text-white">Por menos de <span className="text-[#C9A84C]">$800.000</span></h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-white">
+                Por menos de <span className="text-[#C9A84C]">$800.000</span>
+              </h2>
               <p className="text-white/50 mt-4 text-sm">Joyería de lujo al alcance de todos</p>
             </div>
             <div ref={affordableRef} className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -296,17 +344,36 @@ export default function Homepage() {
                 <Await resolve={featuredProducts}>
                   {(response: any) => {
                     if (!response?.products?.nodes) return null;
-                    const affordable = response.products.nodes.filter((p: any) => parseFloat(p.priceRange.minVariantPrice.amount) < 800000);
-                    if (affordable.length === 0) return <div className="col-span-4 text-center text-white/40 py-12">Próximamente productos en esta categoría</div>;
+                    const affordable = response.products.nodes.filter(
+                      (p: any) => parseFloat(p.priceRange.minVariantPrice.amount) < 800000,
+                    );
+                    if (affordable.length === 0)
+                      return (
+                        <div className="col-span-4 text-center text-white/40 py-12">
+                          Próximamente productos en esta categoría
+                        </div>
+                      );
                     return affordable.map((product: any) => (
-                      <a key={product.id} href={`/products/${product.handle}`} className="affordable-card group bg-[#0A0F1E] border border-white/10 rounded-2xl overflow-hidden hover:border-[#C9A84C] transition-all duration-500">
+                      <a
+                        key={product.id}
+                        href={`/products/${product.handle}`}
+                        className="affordable-card group bg-[#0A0F1E] border border-white/10 rounded-2xl overflow-hidden hover:border-[#C9A84C] transition-all duration-500"
+                      >
                         <div className="overflow-hidden aspect-square">
-                          <img src={product.featuredImage?.url} alt={product.title} className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700" />
+                          <img
+                            src={product.featuredImage?.url}
+                            alt={product.title}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-all duration-700"
+                          />
                         </div>
                         <div className="p-5">
                           <h3 className="text-white font-medium text-base leading-tight">{product.title}</h3>
-                          <p className="mt-2 text-[#C9A84C] font-bold text-lg">${parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('es-CO')}</p>
-                          <span className="mt-4 block text-center w-full bg-[#C9A84C] text-[#0A0F1E] py-2 rounded-full text-sm font-bold hover:bg-white transition-colors">Ver producto</span>
+                          <p className="mt-2 text-[#C9A84C] font-bold text-lg">
+                            ${parseFloat(product.priceRange.minVariantPrice.amount).toLocaleString('es-CO')}
+                          </p>
+                          <span className="mt-4 block text-center w-full bg-[#C9A84C] text-[#0A0F1E] py-2 rounded-full text-sm font-bold hover:bg-white transition-colors">
+                            Ver producto
+                          </span>
                         </div>
                       </a>
                     ));
@@ -315,7 +382,14 @@ export default function Homepage() {
               </Suspense>
             </div>
             <div className="text-center mt-12">
-              <motion.a href="/collections/all" whileHover={{scale: 1.05}} whileTap={{scale: 0.95}} className="inline-block px-10 py-3 border border-[#C9A84C] text-[#C9A84C] uppercase tracking-[0.3em] text-xs hover:bg-[#C9A84C] hover:text-[#0A0F1E] transition-all duration-300">Explorar colección</motion.a>
+              <motion.a
+                href="/collections/all"
+                whileHover={{scale: 1.05}}
+                whileTap={{scale: 0.95}}
+                className="inline-block px-10 py-3 border border-[#C9A84C] text-[#C9A84C] uppercase tracking-[0.3em] text-xs hover:bg-[#C9A84C] hover:text-[#0A0F1E] transition-all duration-300"
+              >
+                Explorar colección
+              </motion.a>
             </div>
           </div>
         </div>
@@ -352,14 +426,6 @@ const HOMEPAGE_SEO_QUERY = `#graphql
   ${COLLECTION_CONTENT_FRAGMENT}
 ` as const;
 
-const COLLECTION_HERO_QUERY = `#graphql
-  query heroCollectionContent($handle: String, $country: CountryCode, $language: LanguageCode)
-  @inContext(country: $country, language: $language) {
-    hero: collection(handle: $handle) { ...CollectionContent }
-  }
-  ${COLLECTION_CONTENT_FRAGMENT}
-` as const;
-
 export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
   query HomeProducts ($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
@@ -380,31 +446,12 @@ export const HOMEPAGE_FEATURED_PRODUCTS_QUERY = `#graphql
 export const FEATURED_COLLECTIONS_QUERY = `#graphql
   query HomeCollections($country: CountryCode, $language: LanguageCode)
   @inContext(country: $country, language: $language) {
-    collections(first: 10) {
+    collections(first: 20) {
       nodes {
         id
         title
         handle
         image { url altText }
-      }
-    }
-  }
-` as const;
-
-export const COLLECTION_PRODUCTS_QUERY = `#graphql
-  query CollectionsPageHome
-    collection(handle: $handle) {
-      title
-      products(first: 20) {
-        nodes {
-          id
-          title
-          handle
-          featuredImage { url altText }
-          priceRange {
-            minVariantPrice { amount currencyCode }
-          }
-        }
       }
     }
   }
