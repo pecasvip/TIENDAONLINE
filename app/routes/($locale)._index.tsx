@@ -99,97 +99,69 @@ export default function Homepage() {
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    if (heroTextRef.current) {
-      const tl = gsap.timeline({delay: 0.3});
-      tl.fromTo(
-        heroTextRef.current.querySelector('.hero-eyebrow'),
-        {opacity: 0, y: 20, letterSpacing: '0.1em'},
-        {opacity: 1, y: 0, letterSpacing: '0.4em', duration: 1, ease: 'power3.out'},
-      )
-        .fromTo(
-          heroTextRef.current.querySelector('.hero-title'),
-          {opacity: 0, y: 60},
-          {opacity: 1, y: 0, duration: 1.2, ease: 'power3.out'},
-          '-=0.6',
-        )
-        .fromTo(
-          heroTextRef.current.querySelector('.hero-subtitle'),
-          {opacity: 0, y: 30},
-          {opacity: 1, y: 0, duration: 0.8, ease: 'power2.out'},
-          '-=0.5',
-        )
-        .fromTo(
-          heroTextRef.current.querySelector('.hero-cta'),
-          {opacity: 0, scale: 0.9},
-          {opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)'},
-          '-=0.3',
-        );
-    }
+    // Delay para esperar que Swiper monte el DOM
+    const timer = setTimeout(() => {
+      // Hero
+      if (heroTextRef.current) {
+        const eyebrow = heroTextRef.current.querySelector('.hero-eyebrow');
+        const title = heroTextRef.current.querySelector('.hero-title');
+        const subtitle = heroTextRef.current.querySelector('.hero-subtitle');
+        const cta = heroTextRef.current.querySelector('.hero-cta');
 
-    if (productsRef.current) {
-      ScrollTrigger.create({
-        trigger: productsRef.current,
-        start: 'top 85%',
-        onEnter: () => {
+        if (eyebrow && title && subtitle && cta) {
+          const tl = gsap.timeline();
+          tl.fromTo(eyebrow, {opacity: 0, y: 20}, {opacity: 1, y: 0, duration: 1, ease: 'power3.out'})
+            .fromTo(title, {opacity: 0, y: 60}, {opacity: 1, y: 0, duration: 1.2, ease: 'power3.out'}, '-=0.6')
+            .fromTo(subtitle, {opacity: 0, y: 30}, {opacity: 1, y: 0, duration: 0.8, ease: 'power2.out'}, '-=0.5')
+            .fromTo(cta, {opacity: 0, scale: 0.9}, {opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.7)'}, '-=0.3');
+        }
+      }
+
+      // Productos
+      if (productsRef.current) {
+        ScrollTrigger.create({
+          trigger: productsRef.current,
+          start: 'top 85%',
+          onEnter: () => {
+            const cards = productsRef.current!.querySelectorAll('.product-card');
+            if (cards.length > 0) {
+              gsap.fromTo(cards, {opacity: 0, y: 50, scale: 0.95}, {opacity: 1, y: 0, scale: 1, duration: 0.7, stagger: 0.12, ease: 'power2.out'});
+            }
+          },
+        });
+      }
+
+      // Categorías
+      if (categoriesRef.current) {
+        const cards = categoriesRef.current.querySelectorAll('.category-card');
+        cards.forEach((card, i) => {
           gsap.fromTo(
-            productsRef.current!.querySelectorAll('.product-card'),
-            {opacity: 0, y: 50, scale: 0.95},
-            {
-              opacity: 1,
-              y: 0,
-              scale: 1,
-              duration: 0.7,
-              stagger: 0.12,
-              ease: 'power2.out',
+            card,
+            {opacity: 0, x: i === 0 ? -80 : i === 2 ? 80 : 0, y: i === 1 ? 60 : 0},
+            {opacity: 1, x: 0, y: 0, duration: 0.9, ease: 'power3.out',
+              scrollTrigger: {trigger: card, start: 'top 85%'},
             },
           );
-        },
-      });
-    }
+        });
+      }
 
-    if (categoriesRef.current) {
-      const cards = categoriesRef.current.querySelectorAll('.category-card');
-      cards.forEach((card, i) => {
-        gsap.fromTo(
-          card,
-          {opacity: 0, x: i === 0 ? -80 : i === 2 ? 80 : 0, y: i === 1 ? 60 : 0},
-          {
-            opacity: 1,
-            x: 0,
-            y: 0,
-            duration: 0.9,
-            ease: 'power3.out',
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-            },
-          },
-        );
-      });
-    }
-
-    if (affordableRef.current) {
-      gsap.fromTo(
-        affordableRef.current.querySelectorAll('.affordable-card'),
-        {opacity: 0, y: 40},
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: affordableRef.current,
-            start: 'top 80%',
-          },
-        },
-      );
-    }
+      // Affordable
+      if (affordableRef.current) {
+        const cards = affordableRef.current.querySelectorAll('.affordable-card');
+        if (cards.length > 0) {
+          gsap.fromTo(cards, {opacity: 0, y: 40}, {opacity: 1, y: 0, duration: 0.6, stagger: 0.1, ease: 'power2.out',
+            scrollTrigger: {trigger: affordableRef.current, start: 'top 80%'},
+          });
+        }
+      }
+    }, 500);
 
     return () => {
+      clearTimeout(timer);
       ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
+  
 
   return (
     <main className="bg-[#0A0F1E] text-[#F8F6F0CF] min-h-screen overflow-hidden">
