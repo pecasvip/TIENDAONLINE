@@ -25,7 +25,7 @@ export function ProductCard({
   quickAdd?: boolean;
 }) {
   const [wished, setWished] = useState(false);
-  const [added, setAdded] = useState(false);
+  const [addedMsg, setAddedMsg] = useState(false);
 
   const cardProduct: Product = product?.variants
     ? (product as Product)
@@ -39,151 +39,96 @@ export function ProductCard({
   const isOnSale = isDiscounted(price as MoneyV2, compareAtPrice as MoneyV2);
   const isNew = isNewArrival(product.publishedAt);
 
+  const discount =
+    isOnSale && compareAtPrice
+      ? Math.round((1 - parseFloat(price.amount) / parseFloat(compareAtPrice.amount)) * 100)
+      : null;
+
   let cardLabel = label;
   if (!cardLabel) {
     if (isOnSale) cardLabel = 'OFERTA';
     else if (isNew) cardLabel = 'NUEVO';
   }
 
-  const discount =
-    isOnSale && compareAtPrice
-      ? Math.round(
-          (1 - parseFloat(price.amount) / parseFloat(compareAtPrice.amount)) *
-            100,
-        )
-      : null;
-
   return (
-    <div
-      className={clsx(
-        'group relative flex flex-col bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-lg transition-all duration-300',
-        className,
-      )}
-    >
+    <div className={clsx('linio-product-card', className)}>
       {/* Badges */}
-      <div className="absolute top-3 left-3 z-10 flex flex-col gap-1">
-        {cardLabel && (
-          <span className="bg-[#0A0F1E] text-white text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-full">
-            {cardLabel}
-          </span>
-        )}
-        {discount && (
-          <span className="bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded-full">
-            -{discount}%
-          </span>
-        )}
-      </div>
+      {discount && <span className="linio-discount-badge">-{discount}%</span>}
+      {!discount && isNew && <span className="linio-new-badge">NUEVO</span>}
 
-      {/* Botón wishlist */}
+      {/* Wishlist */}
       <button
-        onClick={(e) => {
-          e.preventDefault();
-          setWished(!wished);
-        }}
-        className="absolute top-3 right-3 z-10 w-8 h-8 flex items-center justify-center bg-white rounded-full shadow hover:scale-110 transition-transform"
-        aria-label="Agregar a favoritos"
+        className="linio-wish-btn"
+        onClick={(e) => { e.preventDefault(); setWished(!wished); }}
+        aria-label="Guardar en favoritos"
       >
-        <svg
-          viewBox="0 0 24 24"
-          fill={wished ? '#C9A84C' : 'none'}
-          stroke={wished ? '#C9A84C' : '#555'}
-          strokeWidth="2"
-          className="w-4 h-4"
-        >
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+        <svg viewBox="0 0 24 24" width="15" height="15"
+          fill={wished ? '#e53935' : 'none'}
+          stroke={wished ? '#e53935' : '#bbb'}
+          strokeWidth="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
         </svg>
       </button>
 
-      {/* Imagen */}
+      {/* Image */}
       <Link
         onClick={onClick}
         to={`/products/${product.handle}`}
         prefetch="viewport"
-        className="block overflow-hidden bg-gray-50"
+        className="linio-product-img"
       >
-        <div className="aspect-square overflow-hidden">
-          {image ? (
-            <Image
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-              sizes="(min-width: 64em) 25vw, (min-width: 48em) 30vw, 50vw"
-              aspectRatio="1/1"
-              data={image}
-              alt={image.altText || product.title}
-              loading={loading}
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-              <span className="text-gray-300 text-4xl">💎</span>
-            </div>
-          )}
-        </div>
-
-        {/* Overlay con botón vista previa */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <span className="bg-white text-[#0A0F1E] text-xs font-semibold uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
-            Ver producto
-          </span>
-        </div>
+        {image ? (
+          <Image
+            className="w-full h-full object-cover"
+            sizes="(min-width: 64em) 20vw, (min-width: 48em) 30vw, 50vw"
+            aspectRatio="1/1"
+            data={image}
+            alt={image.altText || product.title}
+            loading={loading}
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+            <span style={{fontSize: 40}}>💎</span>
+          </div>
+        )}
       </Link>
 
       {/* Info */}
-      <div className="flex flex-col gap-3 p-4 flex-1">
-        <Link
-          onClick={onClick}
-          to={`/products/${product.handle}`}
-          prefetch="viewport"
-        >
-          <h3 className="text-sm font-medium text-[#0A0F1E] leading-snug line-clamp-2 hover:text-[#C9A84C] transition-colors">
-            {product.title}
-          </h3>
+      <div className="linio-product-info">
+        <Link onClick={onClick} to={`/products/${product.handle}`} prefetch="viewport">
+          <p className="linio-product-name">{product.title}</p>
         </Link>
 
-        {/* Precios */}
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-[#C9A84C] font-bold text-base">
-            <Money withoutTrailingZeros data={price!} />
-          </span>
+        <div className="linio-stars">
+          ★★★★<span style={{color:'#ddd'}}>★</span>
+          <span> (24)</span>
+        </div>
+
+        <div style={{display:'flex', alignItems:'baseline', gap:6, flexWrap:'wrap'}}>
           {isOnSale && compareAtPrice && (
-            <span className="text-gray-400 line-through text-sm">
+            <span className="linio-price-old">
               <Money withoutTrailingZeros data={compareAtPrice as MoneyV2} />
             </span>
           )}
+          <span className="linio-price-new">
+            <Money withoutTrailingZeros data={price!} />
+          </span>
         </div>
-
-        {/* Botón agregar al carrito */}
-        {firstVariant.availableForSale ? (
-          <AddToCartButton
-            lines={[{quantity: 1, merchandiseId: firstVariant.id}]}
-            className="w-full mt-auto bg-[#0A0F1E] hover:bg-[#C9A84C] text-white hover:text-[#0A0F1E] text-xs font-bold uppercase tracking-widest py-3 rounded-full transition-all duration-300"
-          >
-            Agregar al carrito
-          </AddToCartButton>
-        ) : (
-          <button
-            disabled
-            className="w-full mt-auto bg-gray-200 text-gray-400 text-xs font-bold uppercase tracking-widest py-3 rounded-full cursor-not-allowed"
-          >
-            Agotado
-          </button>
-        )}
       </div>
-    </div>
-  );
-}
 
-function CompareAtPrice({
-  data,
-  className,
-}: {
-  data: MoneyV2;
-  className?: string;
-}) {
-  const {currencyNarrowSymbol, withoutTrailingZerosAndCurrency} =
-    useMoney(data);
-  return (
-    <span className={clsx('line-through text-gray-400', className)}>
-      {currencyNarrowSymbol}
-      {withoutTrailingZerosAndCurrency}
-    </span>
+      {/* CTA */}
+      {firstVariant.availableForSale ? (
+        <AddToCartButton
+          lines={[{quantity: 1, merchandiseId: firstVariant.id}]}
+          className="linio-add-btn"
+        >
+          {addedMsg ? '✓ Agregado' : '+ Agregar al carrito'}
+        </AddToCartButton>
+      ) : (
+        <button disabled className="linio-add-btn" style={{background:'#bdbdbd',cursor:'not-allowed'}}>
+          Agotado
+        </button>
+      )}
+    </div>
   );
 }

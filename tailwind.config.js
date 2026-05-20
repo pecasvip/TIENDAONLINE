@@ -7,9 +7,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        cinzel: ['Cinzel', 'serif'],
-        cormorant: ['Cormorant Garamond', 'serif'],
-        sans: ['Helvetica Neue', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        nunito: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+        inter: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['"Nunito Sans"', 'Inter', 'Helvetica Neue', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         serif: ['"IBMPlexSerif"', 'Palatino', 'ui-serif'],
       },
       colors: {
@@ -17,13 +17,15 @@ export default {
         contrast: 'rgb(var(--color-contrast) / <alpha-value>)',
         notice: 'rgb(var(--color-accent) / <alpha-value>)',
         shopPay: 'rgb(var(--color-shop-pay) / <alpha-value>)',
+        linio: {
+          red: '#e53935',
+          'red-dark': '#c62828',
+          yellow: '#FFD600',
+          bg: '#f5f5f5',
+        },
       },
       screens: {
-        sm: '32em',
-        md: '48em',
-        lg: '64em',
-        xl: '80em',
-        '2xl': '96em',
+        sm: '32em', md: '48em', lg: '64em', xl: '80em', '2xl': '96em',
         'sm-max': {max: '48em'},
         'sm-only': {min: '32em', max: '48em'},
         'md-only': {min: '48em', max: '64em'},
@@ -37,13 +39,10 @@ export default {
       },
       height: {
         screen: 'var(--screen-height, 100vh)',
-        'screen-no-nav':
-          'calc(var(--screen-height, 100vh) - var(--height-nav))',
+        'screen-no-nav': 'calc(var(--screen-height, 100vh) - var(--height-nav))',
         'screen-dynamic': 'var(--screen-height-dynamic, 100vh)',
       },
-      width: {
-        mobileGallery: 'calc(100vw - 3rem)',
-      },
+      width: { mobileGallery: 'calc(100vw - 3rem)' },
       fontSize: {
         display: ['var(--font-size-display)', '1.1'],
         heading: ['var(--font-size-heading)', '1.25'],
@@ -51,10 +50,7 @@ export default {
         copy: ['var(--font-size-copy)', '1.5'],
         fine: ['var(--font-size-fine)', '1.333'],
       },
-      maxWidth: {
-        'prose-narrow': '45ch',
-        'prose-wide': '80ch',
-      },
+      maxWidth: { 'prose-narrow': '45ch', 'prose-wide': '80ch' },
       boxShadow: {
         border: 'inset 0px 0px 0px 1px rgb(var(--color-primary) / 0.08)',
         darkHeader: 'inset 0px -1px 0px 0px rgba(21, 21, 21, 0.4)',
