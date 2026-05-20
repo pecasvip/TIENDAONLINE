@@ -3,14 +3,13 @@ import {
   type MetaArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {Suspense, useRef, useEffect} from 'react';
+import {Suspense} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
-import {Autoplay, FreeMode, Navigation, Pagination} from 'swiper/modules';
+import {Autoplay, FreeMode, Pagination} from 'swiper/modules';
 import 'swiper/css/pagination';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {getSeoMeta} from '@shopify/hydrogen';
-import {AddToCartButton} from '~/components/AddToCartButton';
 
 import {MEDIA_FRAGMENT} from '~/data/fragments';
 import {seoPayload} from '~/lib/seo.server';
