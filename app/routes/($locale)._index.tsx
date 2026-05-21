@@ -121,13 +121,12 @@ export default function Homepage() {
         >
           {HERO_SLIDES.map((slide, i) => (
             <SwiperSlide key={i}>
-  <div style={{
-    position: 'relative',
-    width: '100%',
-    aspectRatio: '5/2',
-    minHeight: 180,
-    overflow: 'hidden'
-  }}>
+ <div style={{
+  position: 'relative',
+  width: '100%',
+  height: 'clamp(300px, 55vw, 620px)',
+  overflow: 'hidden'
+}}>
     <picture style={{position:'absolute', inset:0, width:'100%', height:'100%'}}>
       <source media="(max-width:768px)" srcSet={slide.imgMobile} />
       <img
