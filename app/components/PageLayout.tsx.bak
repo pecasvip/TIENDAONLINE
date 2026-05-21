@@ -42,8 +42,21 @@ export function PageLayout({children, layout}: LayoutProps) {
   const {headerMenu, footerMenu} = layout || {};
   return (
     <>
-      <AnnouncementBar />
       <div className="flex flex-col min-h-screen">
+        <a href="#mainContent" className="sr-only">Saltar al contenido</a>
+        {headerMenu && layout?.shop.name && (
+          <Header title={layout.shop.name} menu={headerMenu} />
+        )}
+        <main role="main" id="mainContent" className="flex-grow bg-[#f5f5f5]">
+          {children}
+        </main>
+      </div>
+      {footerMenu && <Footer menu={footerMenu} />}
+      <AnnouncementBar />
+      <MobileBottomNav />
+    </>
+  );
+}
         <a href="#mainContent" className="sr-only">Skip to content</a>
         {headerMenu && layout?.shop.name && (
           <Header title={layout.shop.name} menu={headerMenu} />
