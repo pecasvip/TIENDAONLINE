@@ -53,19 +53,6 @@ export function PageLayout({children, layout}: LayoutProps) {
       </div>
       {footerMenu && <Footer menu={footerMenu} />}
       <AnnouncementBar />
-      <MobileBottomNav />
-    </>
-  );
-}
-        <a href="#mainContent" className="sr-only">Skip to content</a>
-        {headerMenu && layout?.shop.name && (
-          <Header title={layout.shop.name} menu={headerMenu} />
-        )}
-        <main role="main" id="mainContent" className="flex-grow">
-          {children}
-        </main>
-      </div>
-      {footerMenu && <Footer menu={footerMenu} />}
     </>
   );
 }
