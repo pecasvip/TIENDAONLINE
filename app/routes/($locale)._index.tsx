@@ -3,7 +3,7 @@ import {
   type MetaArgs,
   type LoaderFunctionArgs,
 } from '@shopify/remix-oxygen';
-import {Suspense} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import 'swiper/css';
 import {Autoplay, FreeMode, Pagination} from 'swiper/modules';
@@ -61,31 +61,72 @@ export const meta = ({matches}: MetaArgs<typeof loader>) => {
   return getSeoMeta(...seoData);
 };
 
-// ── Variantes de animación reutilizables ──
+// ── Variantes de animación ──
 const fadeUp = {
   hidden: {opacity: 0, y: 32},
   show:   {opacity: 1, y: 0, transition: {duration: 0.55, ease: 'easeOut'}},
 };
-
 const fadeIn = {
   hidden: {opacity: 0},
   show:   {opacity: 1, transition: {duration: 0.5, ease: 'easeOut'}},
 };
-
 const staggerContainer = {
   hidden: {},
   show: {transition: {staggerChildren: 0.08}},
 };
-
 const cardVariant = {
   hidden: {opacity: 0, y: 24, scale: 0.97},
-  show:   {opacity: 1, y: 0,  scale: 1, transition: {duration: 0.45, ease: 'easeOut'}},
+  show:   {opacity: 1, y: 0, scale: 1, transition: {duration: 0.45, ease: 'easeOut'}},
 };
-
 const popIn = {
   hidden: {opacity: 0, scale: 0.8},
   show:   {opacity: 1, scale: 1, transition: {type: 'spring', stiffness: 300, damping: 20}},
 };
+
+// ── Contador regresivo ──
+const OFFER_END = new Date();
+OFFER_END.setHours(OFFER_END.getHours() + 6); // 6 horas desde que carga la página
+
+function useCountdown(target: Date) {
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const diff = target.getTime() - Date.now();
+    return diff > 0 ? diff : 0;
+  });
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const diff = target.getTime() - Date.now();
+      setTimeLeft(diff > 0 ? diff : 0);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [target]);
+  const h = Math.floor(timeLeft / 3_600_000);
+  const m = Math.floor((timeLeft % 3_600_000) / 60_000);
+  const s = Math.floor((timeLeft % 60_000) / 1_000);
+  return {h, m, s, done: timeLeft === 0};
+}
+
+function CountdownTimer() {
+  const {h, m, s, done} = useCountdown(OFFER_END);
+  if (done) return <span className="promo-pill red">🔥 Oferta terminada</span>;
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return (
+    <span className="promo-pill red" style={{display:'inline-flex', alignItems:'center', gap:4}}>
+      🔥 Oferta termina en&nbsp;
+      <motion.span
+        key={s}
+        initial={{opacity: 0, y: -6}}
+        animate={{opacity: 1, y: 0}}
+        style={{
+          fontWeight: 900,
+          fontVariantNumeric: 'tabular-nums',
+          letterSpacing: '0.05em',
+        }}
+      >
+        {pad(h)}:{pad(m)}:{pad(s)}
+      </motion.span>
+    </span>
+  );
+}
 
 const CATEGORIES = [
   {handle: 'anillos',          emoji: '💍', label: 'Anillos'},
@@ -154,7 +195,6 @@ export default function Homepage() {
                 height: 'clamp(300px, 55vw, 620px)',
                 overflow: 'hidden',
               }}>
-                {/* Imagen sin overlay */}
                 <picture style={{position: 'absolute', inset: 0, width: '100%', height: '100%'}}>
                   <source media="(max-width:768px)" srcSet={slide.imgMobile} />
                   <img
@@ -164,7 +204,6 @@ export default function Homepage() {
                   />
                 </picture>
 
-                {/* Contenido animado */}
                 <div style={{
                   position: 'absolute',
                   inset: 0,
@@ -180,74 +219,62 @@ export default function Homepage() {
                     variants={staggerContainer}
                     style={{maxWidth: 560}}
                   >
-                    <motion.span
-                      variants={fadeUp}
-                      style={{
-                        background: '#FFD600',
-                        color: '#1a1a1a',
-                        fontSize: 11,
-                        fontWeight: 900,
-                        padding: '4px 12px',
-                        borderRadius: 3,
-                        letterSpacing: '0.08em',
-                        textTransform: 'uppercase',
-                        display: 'inline-block',
-                        marginBottom: 12,
-                      }}
-                    >
+                    <motion.span variants={fadeUp} style={{
+                      background: '#FFD600',
+                      color: '#1a1a1a',
+                      fontSize: 11,
+                      fontWeight: 900,
+                      padding: '4px 12px',
+                      borderRadius: 3,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      display: 'inline-block',
+                      marginBottom: 12,
+                    }}>
                       {slide.tag}
                     </motion.span>
 
-                    <motion.h1
-                      variants={fadeUp}
-                      style={{
-                        color: 'white',
-                        fontWeight: 900,
-                        fontSize: 'clamp(26px,5vw,52px)',
-                        lineHeight: 1.1,
-                        margin: '0 0 10px',
-                        textShadow: '0 2px 20px rgba(0,0,0,0.85), 0 0 60px rgba(0,0,0,0.6)',
-                      }}
-                    >
+                    <motion.h1 variants={fadeUp} style={{
+                      color: 'white',
+                      fontWeight: 900,
+                      fontSize: 'clamp(26px,5vw,52px)',
+                      lineHeight: 1.1,
+                      margin: '0 0 10px',
+                      textShadow: '0 2px 20px rgba(0,0,0,0.85), 0 0 60px rgba(0,0,0,0.6)',
+                    }}>
                       {slide.title}<br/>
                       <em style={{color: '#FFD600', fontStyle: 'normal', textShadow: '0 2px 20px rgba(0,0,0,0.9)'}}>
                         {slide.titleAccent}
                       </em>
                     </motion.h1>
 
-                    <motion.p
-                      variants={fadeUp}
-                      style={{
-                        color: 'white',
-                        fontSize: 13,
-                        marginBottom: 24,
-                        fontWeight: 600,
-                        textShadow: '0 1px 10px rgba(0,0,0,0.95)',
-                      }}
-                    >
+                    <motion.p variants={fadeUp} style={{
+                      color: 'white',
+                      fontSize: 13,
+                      marginBottom: 24,
+                      fontWeight: 600,
+                      textShadow: '0 1px 10px rgba(0,0,0,0.95)',
+                    }}>
                       {slide.sub}
                     </motion.p>
 
                     <motion.div variants={fadeUp}>
                       <motion.div whileTap={{scale: 0.96}} whileHover={{scale: 1.03}}>
-                        <Link
-                          to={slide.href}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: 8,
-                            padding: '13px 28px',
-                            background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
-                            color: '#1a1a1a',
-                            fontWeight: 900,
-                            fontSize: 13,
-                            borderRadius: 4,
-                            textDecoration: 'none',
-                            letterSpacing: '0.05em',
-                            textTransform: 'uppercase',
-                            boxShadow: '0 4px 20px rgba(255,214,0,0.45)',
-                          }}
-                        >
+                        <Link to={slide.href} style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 8,
+                          padding: '13px 28px',
+                          background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+                          color: '#1a1a1a',
+                          fontWeight: 900,
+                          fontSize: 13,
+                          borderRadius: 4,
+                          textDecoration: 'none',
+                          letterSpacing: '0.05em',
+                          textTransform: 'uppercase',
+                          boxShadow: '0 4px 20px rgba(255,214,0,0.45)',
+                        }}>
                           {slide.cta} →
                         </Link>
                       </motion.div>
@@ -260,14 +287,14 @@ export default function Homepage() {
         </Swiper>
       </section>
 
-      {/* ── PROMO STRIP ── */}
+      {/* ── PROMO STRIP con contador ── */}
       <motion.div
         className="promo-strip"
         initial={{opacity: 0, y: -10}}
         animate={{opacity: 1, y: 0}}
         transition={{duration: 0.4, delay: 0.2}}
       >
-        <span className="promo-pill red">🔥 Hasta 60% OFF</span>
+        <CountdownTimer />
         <span className="promo-pill amber">✈️ Envío gratis</span>
         <span className="promo-pill blue">⚡ Pago seguro SSL</span>
         <span className="promo-pill green">🏆 Garantía de calidad</span>
@@ -415,24 +442,21 @@ export default function Homepage() {
             <p>Perfectos para San Valentín · Aniversarios · Cumpleaños</p>
           </div>
           <motion.div whileTap={{scale: 0.96}} whileHover={{scale: 1.04}}>
-            <Link
-              to="/collections/all"
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                padding: '12px 24px',
-                background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
-                color: '#1a1a1a',
-                fontWeight: 900,
-                fontSize: 13,
-                borderRadius: 4,
-                textDecoration: 'none',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                boxShadow: '0 4px 16px rgba(255,140,0,0.35)',
-                whiteSpace: 'nowrap',
-              }}
-            >
+            <Link to="/collections/all" style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+              color: '#1a1a1a',
+              fontWeight: 900,
+              fontSize: 13,
+              borderRadius: 4,
+              textDecoration: 'none',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              boxShadow: '0 4px 16px rgba(255,140,0,0.35)',
+              whiteSpace: 'nowrap',
+            }}>
               Ver sets →
             </Link>
           </motion.div>
@@ -477,11 +501,7 @@ export default function Homepage() {
                           transition={{duration: 0.35}}
                         >
                           {col.image?.url ? (
-                            <img
-                              src={col.image.url}
-                              alt={col.title}
-                              style={{width:'100%', height:'100%', objectFit:'cover'}}
-                            />
+                            <img src={col.image.url} alt={col.title} style={{width:'100%', height:'100%', objectFit:'cover'}} />
                           ) : (
                             <div style={{width:'100%', height:'100%', background:'#e8e8e8', display:'flex', alignItems:'center', justifyContent:'center'}}>
                               <span style={{fontSize:40}}>💍</span>
