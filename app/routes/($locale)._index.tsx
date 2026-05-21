@@ -61,14 +61,14 @@ export const meta = ({matches}: MetaArgs<typeof loader>) => {
 };
 
 const CATEGORIES = [
-  {handle: 'anillos',    emoji: '💍', label: 'Anillos'},
-  {handle: 'collares',   emoji: '📿', label: 'Collares'},
+  {handle: 'anillos',          emoji: '💍', label: 'Anillos'},
+  {handle: 'collares',         emoji: '📿', label: 'Collares'},
   {handle: 'pulseras-tejidas', emoji: '🔗', label: 'Pulseras'},
-  {handle: 'topos',      emoji: '✨', label: 'Aretes'},
-  {handle: 'relojes',    emoji: '⌚', label: 'Relojes'},
-  {handle: 'dijes',      emoji: '🏅', label: 'Dijes'},
-  {handle: 'sets',       emoji: '🎁', label: 'Sets regalo'},
-  {handle: 'all',        emoji: '💛', label: 'Oro 18k'},
+  {handle: 'topos',            emoji: '✨', label: 'Aretes'},
+  {handle: 'relojes',          emoji: '⌚', label: 'Relojes'},
+  {handle: 'dijes',            emoji: '🏅', label: 'Dijes'},
+  {handle: 'sets',             emoji: '🎁', label: 'Sets regalo'},
+  {handle: 'all',              emoji: '💛', label: 'Oro 18k'},
 ];
 
 const HERO_SLIDES = [
@@ -121,39 +121,105 @@ export default function Homepage() {
         >
           {HERO_SLIDES.map((slide, i) => (
             <SwiperSlide key={i}>
- <div style={{
-  position: 'relative',
-  width: '100%',
-  height: 'clamp(300px, 55vw, 620px)',
-  overflow: 'hidden'
-}}>
-    <picture style={{position:'absolute', inset:0, width:'100%', height:'100%'}}>
-      <source media="(max-width:768px)" srcSet={slide.imgMobile} />
-      <img
-        src={slide.img}
-        alt={slide.title}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: 'top'
-        }}
-      />
-    </picture>
-    <div style={{position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)'}} />
-    <div style={{position:'relative', zIndex:2, padding:'clamp(28px,6vw,60px) clamp(20px,5vw,80px)', maxWidth:560}}>
-      <span style={{background:'#FFD600', color:'#1a1a1a', fontSize:11, fontWeight:900, padding:'4px 12px', borderRadius:3, letterSpacing:'0.05em', textTransform:'uppercase'}}>
-        {slide.tag}
-      </span>
-      <h1 style={{color:'white', fontWeight:900, fontSize:'clamp(26px,5vw,52px)', lineHeight:1.1, margin:'12px 0 10px'}}>
-        {slide.title}<br/>
-        <em style={{color:'#FFD600', fontStyle:'normal'}}>{slide.titleAccent}</em>
-      </h1>
-      <p style={{color:'rgba(255,255,255,0.8)', fontSize:13, marginBottom:20}}>{slide.sub}</p>
-      <Link to={slide.href} className="linio-hero-cta">{slide.cta} →</Link>
-    </div>
-  </div>
-</SwiperSlide>
+              <div style={{
+                position: 'relative',
+                width: '100%',
+                height: 'clamp(300px, 55vw, 620px)',
+                overflow: 'hidden',
+              }}>
+                {/* IMAGEN — sin overlay */}
+                <picture style={{position:'absolute', inset:0, width:'100%', height:'100%'}}>
+                  <source media="(max-width:768px)" srcSet={slide.imgMobile} />
+                  <img
+                    src={slide.img}
+                    alt={slide.title}
+                    style={{width:'100%', height:'100%', objectFit:'cover', objectPosition:'top'}}
+                  />
+                </picture>
+
+                {/* CONTENIDO con text-shadow para legibilidad sin overlay */}
+                <div style={{
+                  position: 'absolute',
+                  inset: 0,
+                  zIndex: 2,
+                  display: 'flex',
+                  alignItems: 'center',
+                  padding: 'clamp(28px,6vw,60px) clamp(20px,5vw,80px)',
+                }}>
+                  <div style={{maxWidth: 560}}>
+                    <span style={{
+                      background: '#FFD600',
+                      color: '#1a1a1a',
+                      fontSize: 11,
+                      fontWeight: 900,
+                      padding: '4px 12px',
+                      borderRadius: 3,
+                      letterSpacing: '0.08em',
+                      textTransform: 'uppercase',
+                      display: 'inline-block',
+                      marginBottom: 12,
+                    }}>
+                      {slide.tag}
+                    </span>
+                    <h1 style={{
+                      color: 'white',
+                      fontWeight: 900,
+                      fontSize: 'clamp(26px,5vw,52px)',
+                      lineHeight: 1.1,
+                      margin: '0 0 10px',
+                      textShadow: '0 2px 20px rgba(0,0,0,0.85), 0 0 60px rgba(0,0,0,0.6)',
+                    }}>
+                      {slide.title}<br/>
+                      <em style={{
+                        color: '#FFD600',
+                        fontStyle: 'normal',
+                        textShadow: '0 2px 20px rgba(0,0,0,0.9)',
+                      }}>
+                        {slide.titleAccent}
+                      </em>
+                    </h1>
+                    <p style={{
+                      color: 'white',
+                      fontSize: 13,
+                      marginBottom: 24,
+                      fontWeight: 600,
+                      textShadow: '0 1px 10px rgba(0,0,0,0.95)',
+                    }}>
+                      {slide.sub}
+                    </p>
+                    <Link
+                      to={slide.href}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 8,
+                        padding: '13px 28px',
+                        background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+                        color: '#1a1a1a',
+                        fontWeight: 900,
+                        fontSize: 13,
+                        borderRadius: 4,
+                        textDecoration: 'none',
+                        letterSpacing: '0.05em',
+                        textTransform: 'uppercase',
+                        boxShadow: '0 4px 20px rgba(255,214,0,0.45)',
+                        transition: 'transform 0.2s, box-shadow 0.2s',
+                      }}
+                      onMouseOver={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+                        (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 32px rgba(255,214,0,0.65)';
+                      }}
+                      onMouseOut={(e) => {
+                        (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                        (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 20px rgba(255,214,0,0.45)';
+                      }}
+                    >
+                      {slide.cta} →
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </SwiperSlide>
           ))}
         </Swiper>
       </section>
@@ -240,8 +306,30 @@ export default function Homepage() {
                         </div>
                         <Link
                           to={`/products/${product.handle}`}
-                          className="linio-add-btn"
-                          style={{display:'block', textAlign:'center', textDecoration:'none'}}
+                          style={{
+                            display: 'block',
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            margin: '8px 12px 12px',
+                            padding: '10px 16px',
+                            background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+                            color: '#1a1a1a',
+                            fontWeight: 900,
+                            fontSize: 12,
+                            borderRadius: 4,
+                            letterSpacing: '0.04em',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 2px 10px rgba(255,140,0,0.3)',
+                            transition: 'transform 0.2s, box-shadow 0.2s',
+                          }}
+                          onMouseOver={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(255,140,0,0.5)';
+                          }}
+                          onMouseOut={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 10px rgba(255,140,0,0.3)';
+                          }}
                         >
                           Ver producto →
                         </Link>
@@ -262,7 +350,35 @@ export default function Homepage() {
             <h3>🎁 Sets de regalo especiales</h3>
             <p>Perfectos para San Valentín · Aniversarios · Cumpleaños</p>
           </div>
-          <Link to="/collections/all" className="linio-mid-banner-btn">Ver sets →</Link>
+          <Link
+            to="/collections/all"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              padding: '12px 24px',
+              background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+              color: '#1a1a1a',
+              fontWeight: 900,
+              fontSize: 13,
+              borderRadius: 4,
+              textDecoration: 'none',
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              boxShadow: '0 4px 16px rgba(255,140,0,0.35)',
+              transition: 'transform 0.2s, box-shadow 0.2s',
+              whiteSpace: 'nowrap',
+            }}
+            onMouseOver={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(-2px)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 8px 28px rgba(255,140,0,0.55)';
+            }}
+            onMouseOut={(e) => {
+              (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+              (e.currentTarget as HTMLElement).style.boxShadow = '0 4px 16px rgba(255,140,0,0.35)';
+            }}
+          >
+            Ver sets →
+          </Link>
         </div>
       </div>
 
@@ -358,7 +474,35 @@ export default function Homepage() {
                           <div className="linio-stars">★★★★<span style={{color:'#eee'}}>★</span></div>
                           <div className="linio-price-new">${price.toLocaleString('es-CO')}</div>
                         </div>
-                        <Link to={`/products/${product.handle}`} className="linio-add-btn" style={{display:'block', textAlign:'center', textDecoration:'none'}}>Ver producto →</Link>
+                        <Link
+                          to={`/products/${product.handle}`}
+                          style={{
+                            display: 'block',
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            margin: '8px 12px 12px',
+                            padding: '10px 16px',
+                            background: 'linear-gradient(135deg, #FFD600 0%, #FF8C00 100%)',
+                            color: '#1a1a1a',
+                            fontWeight: 900,
+                            fontSize: 12,
+                            borderRadius: 4,
+                            letterSpacing: '0.04em',
+                            textTransform: 'uppercase',
+                            boxShadow: '0 2px 10px rgba(255,140,0,0.3)',
+                            transition: 'transform 0.2s, box-shadow 0.2s',
+                          }}
+                          onMouseOver={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'translateY(-1px)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0 6px 20px rgba(255,140,0,0.5)';
+                          }}
+                          onMouseOut={(e) => {
+                            (e.currentTarget as HTMLElement).style.transform = 'translateY(0)';
+                            (e.currentTarget as HTMLElement).style.boxShadow = '0 2px 10px rgba(255,140,0,0.3)';
+                          }}
+                        >
+                          Ver producto →
+                        </Link>
                       </div>
                     );
                   })}
