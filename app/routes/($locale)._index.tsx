@@ -121,25 +121,40 @@ export default function Homepage() {
         >
           {HERO_SLIDES.map((slide, i) => (
             <SwiperSlide key={i}>
-              <div style={{position:'relative', minHeight: 220, overflow:'hidden'}}>
-                <picture style={{position:'absolute', inset:0, width:'100%', height:'100%'}}>
-                  <source media="(max-width:768px)" srcSet={slide.imgMobile} />
-                  <img src={slide.img} alt={slide.title} style={{width:'100%', height:'100%', objectFit:'cover', objectPosition:'top'}} />
-                </picture>
-                <div style={{position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)'}} />
-                <div style={{position:'relative', zIndex:2, padding:'clamp(28px,6vw,60px) clamp(20px,5vw,80px)', maxWidth:560}}>
-                  <span style={{background:'#FFD600', color:'#1a1a1a', fontSize:11, fontWeight:900, padding:'4px 12px', borderRadius:3, letterSpacing:'0.05em', textTransform:'uppercase'}}>
-                    {slide.tag}
-                  </span>
-                  <h1 style={{color:'white', fontWeight:900, fontSize:'clamp(26px,5vw,52px)', lineHeight:1.1, margin:'12px 0 10px'}}>
-                    {slide.title}<br/>
-                    <em style={{color:'#FFD600', fontStyle:'normal'}}>{slide.titleAccent}</em>
-                  </h1>
-                  <p style={{color:'rgba(255,255,255,0.8)', fontSize:13, marginBottom:20}}>{slide.sub}</p>
-                  <Link to={slide.href} className="linio-hero-cta">{slide.cta} →</Link>
-                </div>
-              </div>
-            </SwiperSlide>
+  <div style={{
+    position: 'relative',
+    width: '100%',
+    aspectRatio: '5/2',
+    minHeight: 180,
+    overflow: 'hidden'
+  }}>
+    <picture style={{position:'absolute', inset:0, width:'100%', height:'100%'}}>
+      <source media="(max-width:768px)" srcSet={slide.imgMobile} />
+      <img
+        src={slide.img}
+        alt={slide.title}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: 'top'
+        }}
+      />
+    </picture>
+    <div style={{position:'absolute', inset:0, background:'linear-gradient(90deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 60%, transparent 100%)'}} />
+    <div style={{position:'relative', zIndex:2, padding:'clamp(28px,6vw,60px) clamp(20px,5vw,80px)', maxWidth:560}}>
+      <span style={{background:'#FFD600', color:'#1a1a1a', fontSize:11, fontWeight:900, padding:'4px 12px', borderRadius:3, letterSpacing:'0.05em', textTransform:'uppercase'}}>
+        {slide.tag}
+      </span>
+      <h1 style={{color:'white', fontWeight:900, fontSize:'clamp(26px,5vw,52px)', lineHeight:1.1, margin:'12px 0 10px'}}>
+        {slide.title}<br/>
+        <em style={{color:'#FFD600', fontStyle:'normal'}}>{slide.titleAccent}</em>
+      </h1>
+      <p style={{color:'rgba(255,255,255,0.8)', fontSize:13, marginBottom:20}}>{slide.sub}</p>
+      <Link to={slide.href} className="linio-hero-cta">{slide.cta} →</Link>
+    </div>
+  </div>
+</SwiperSlide>
           ))}
         </Swiper>
       </section>
